@@ -13,8 +13,7 @@ function App() {
     {
       id: 1,
       nome: 'easy.user',
-      email: 'easydots@crmesys.com.br',
-      ativo: true,
+      email: 'easydots@crmesys.com.br'
     },
   ]);
 
@@ -24,6 +23,7 @@ function App() {
   const [notificacao, setNotificacao] = useState({ show: false });
 
   const init = async paranoid => {
+    // console.log(paranoid)
     try {
       setNotificacao({});
 
@@ -31,7 +31,10 @@ function App() {
 
       // ------------------------------------
       // TODO Implementar a busca de usarios na API utilizando o Service de usuario e atualizar a lista  de "items" com os valores retornados
+      const list = await UsuarioService.findAll(paranoid)
+      setItems(list.data.users)
       if (response.status === 200) {
+        handleMessage(response)
       }
       // ------------------------------------
     } catch (error) {
@@ -43,26 +46,6 @@ function App() {
     init();
   }, []);
 
-  const { form, InputChange, clear } = useForm({
-    email: "",
-    password: ""
-})
-
-const login = (event) => {
-    console.log('oie')
-    event.preventDefault();
-    const body = form
-
-    axios
-        .post(`${USUARIO_API_BASE_URL}/user`, body)
-        .then((res) => {
-            alert('Success!')
-        })
-        .catch((error) => {
-            console.log(error)
-            alert("Error! Try again.")
-        })
-}
 
   const handleError = async response => {
     if (response?.data?.message) setNotificacao({ show: true, message: response.data.message });
@@ -72,6 +55,7 @@ const login = (event) => {
     if (response && typeof response === 'string') setNotificacao({ show: true, message: response });
   };
 
+  // para cadastrar usuário
   const adicionar = async item => {
     try {
       const response = await UsuarioService.create(item);
@@ -83,6 +67,7 @@ const login = (event) => {
     }
   };
 
+  // para atualizar um usuário por id
   const atualizar = async item => {
     try {
       setNotificacao({});
@@ -97,12 +82,13 @@ const login = (event) => {
     }
   };
 
+  // para remover um usuário por id
   const remover = async id => {
     try {
       setNotificacao({});
       // ------------------------------------
       // TODO Implementar a remoção de usuarios por ID
-      const response = null;
+      const response = await UsuarioService.deleteByID(id)
 
       if (response.status === 200) init(paranoid);
       handleMessage(response);
@@ -115,12 +101,13 @@ const login = (event) => {
     }
   };
 
+  // para restaurar usuário por id
   const restaurar = async id => {
     try {
       setNotificacao({});
       // ------------------------------------
       // TODO Implementar a remoção de usuarios por ID
-      const response = null;
+      const response = await UsuarioService.restoreByID(id)
 
       if (response.status === 200) init(paranoid);
       handleMessage(response);
@@ -140,10 +127,11 @@ const login = (event) => {
       setParanoid(!paranoid);
       init(!paranoid);
     } else if (action === 'EDITAR') {
+      atualizar(v);
       setItem(v);
       setEditMode(true);
     } else if (action === 'GRAVAR') {
-      atualizar(v);
+      adicionar(v)
     } else if (action === 'REMOVER') {
       remover(v.id);
     } else if (action === 'RESTAURAR') {
@@ -185,6 +173,7 @@ const login = (event) => {
     );
   };
 
+  // se estiver no modo 'editar'
   if (editMode) {
     return (
       <div className='App m-5 d-flex row'>
@@ -207,7 +196,7 @@ const login = (event) => {
               <a
                 href='#'
                 className='card-link btn btn-success'
-                onClick={() => onClickAction('GRAVAR', login)}
+                onClick={() => onClickAction('GRAVAR', item)}
               >
                 Gravar
               </a>
@@ -261,6 +250,11 @@ const login = (event) => {
           {/* TODO Adicionar o componente de Lista de usuarios e passar os parametros items e onClickAction */}
 
           {/* // ------------------------------------ */}
+
+          <UsuarioList
+            items={items}
+            onClickAction={onClickAction}
+          />
         </div>
       </div>
     </div>

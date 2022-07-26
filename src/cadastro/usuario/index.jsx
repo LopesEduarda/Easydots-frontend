@@ -6,7 +6,8 @@ const UsuarioItem = ({ onClickAction, item }) => (
   <li className='list-group-item'>
     <div key={item.id} className=' d-flex justify-content-between'>
       <div>{item.id}</div>
-      <div>{item.nome}</div>
+      <div>{item.name}</div>
+      <div>{item.email}</div>
       {/* // ------------------------------------ */}
       {/* TODO  mostrar o email do usuario*/}
 

@@ -10,6 +10,7 @@ export function Text({ id, name, label, value, onChange, type, autoComplete, ful
       <input
         id={id}
         name={name}
+        value={value}
         type={type}
         autoComplete={autoComplete}
         className='form-control'

@@ -13,6 +13,18 @@ export default function UsuarioForm({ item, setValue }) {
         {/* // ------------------------------------ */}
 
         <Text
+          id='name'
+          label='Name'
+          name='Name'
+          autoComplete='Name'
+          value={item.name}
+          onChange={v => {
+            let valor = v.target?.value;
+            setValue({ ...item, name: valor });
+          }}
+        />
+
+        <Text
           id='email'
           label='E-mail'
           name='email'
@@ -25,24 +37,25 @@ export default function UsuarioForm({ item, setValue }) {
         />
         <Text
           required
-          id='senha'
-          name='senha'
-          label='Senha'
+          id='password'
+          name='password'
+          label='Password'
           type='password'
-          value={item.senha}
+          value={item.password}
           autoComplete='current-password'
           onChange={v => {
             let valor = v.target?.value;
-            setValue({ ...item, senha: valor });
+            setValue({ ...item, password: valor });
           }}
         />
       </div>
 
-      <div className='mb-3 row'>
+       {/* <div className='mb-3 row'>
         <label className='col-sm-2 col-form-label' htmlFor='flexCheckDefault'>
           Ativo
-        </label>
-        <div className='col-sm-10'>
+        </label> */}
+        
+        {/* <div className='col-sm-10'>
           <input
             className='form-check-input float-start'
             type='checkbox'
@@ -52,9 +65,7 @@ export default function UsuarioForm({ item, setValue }) {
               let valor = v.target?.checked;
               setValue({ ...item, ativo: valor });
             }}
-          />
-        </div>
-      </div>
-    </div>
-  );
+          /> */}
+        </div>  
+        );
 }
