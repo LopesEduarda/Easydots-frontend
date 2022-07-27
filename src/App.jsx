@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-
 import UsuarioList from './cadastro/usuario';
 import UsuarioForm from './cadastro/usuario/form';
 import UsuarioService from './services/UsuarioService';
@@ -8,6 +7,7 @@ import useForm from './hooks/useForm';
 import axios from 'axios'
 
 function App() {
+  const [editUserPage, setEditUserPage] = useState(false)
   const [item, setItem] = useState({});
   const [items, setItems] = useState([
     {
@@ -17,26 +17,24 @@ function App() {
     },
   ]);
 
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(true);
 
   const [paranoid, setParanoid] = useState(true);
   const [notificacao, setNotificacao] = useState({ show: false });
 
   const init = async paranoid => {
-    // console.log(paranoid)
+
     try {
       setNotificacao({});
 
       const response = null;
 
-      // ------------------------------------
-      // TODO Implementar a busca de usarios na API utilizando o Service de usuario e atualizar a lista  de "items" com os valores retornados
       const list = await UsuarioService.findAll(paranoid)
       setItems(list.data.users)
+
       if (response.status === 200) {
         handleMessage(response)
       }
-      // ------------------------------------
     } catch (error) {
       handleError(error.response);
     }
@@ -86,8 +84,7 @@ function App() {
   const remover = async id => {
     try {
       setNotificacao({});
-      // ------------------------------------
-      // TODO Implementar a remoção de usuarios por ID
+
       const response = await UsuarioService.deleteByID(id)
 
       if (response.status === 200) init(paranoid);
@@ -100,6 +97,26 @@ function App() {
       handleError(error.response);
     }
   };
+
+  const usuariosDeletados = async paranoid => {
+
+    try {
+      setNotificacao({});
+
+      const response = null;
+
+      const list = await UsuarioService.getDeletedUsers()
+      console.log(list)
+      setItems(list.data.users)
+
+      if (response.status === 200) {
+        handleMessage(response)
+      }
+    } catch (error) {
+      handleError(error.response);
+    }
+  };
+
 
   // para restaurar usuário por id
   const restaurar = async id => {
@@ -122,14 +139,20 @@ function App() {
 
     if (action === 'ADICIONAR') {
       setItem({});
-      setEditMode(true);
+      setEditMode(false);
+      setEditUserPage(false);
     } else if (action === 'MOSTRAR_REMOVIDOS') {
       setParanoid(!paranoid);
-      init(!paranoid);
+      usuariosDeletados()
+      // init(!paranoid);
+    } else if (action === 'OCULTAR_REMOVIDOS') {
+      setParanoid(!paranoid);
+      init()
     } else if (action === 'EDITAR') {
       atualizar(v);
       setItem(v);
-      setEditMode(true);
+      setEditMode(false);
+      setEditUserPage(true);
     } else if (action === 'GRAVAR') {
       adicionar(v)
     } else if (action === 'REMOVER') {
@@ -137,7 +160,7 @@ function App() {
     } else if (action === 'RESTAURAR') {
       restaurar(v.id);
     } else if (action === 'VOLTAR') {
-      setEditMode(false);
+      setEditMode(true);
       setItem({});
     }
   };
@@ -174,7 +197,7 @@ function App() {
   };
 
   // se estiver no modo 'editar'
-  if (editMode) {
+  if (!editMode) {
     return (
       <div className='App m-5 d-flex row'>
         <Notificacao />
@@ -193,13 +216,31 @@ function App() {
               >
                 Voltar
               </a>
+
+              {editUserPage ?
+                <a
+                  href='#'
+                  className='card-link btn btn-success'
+                  onClick={() => onClickAction('EDITAR', item)}
+                >
+                  Editar
+                </a>
+                :
+                <a
+                  href='#'
+                  className='card-link btn btn-success'
+                  onClick={() => onClickAction('GRAVAR', item)}
+                >
+                  Gravar
+                </a>}
+              {/* 
               <a
                 href='#'
                 className='card-link btn btn-success'
                 onClick={() => onClickAction('GRAVAR', item)}
               >
                 Gravar
-              </a>
+              </a> */}
             </div>
 
             <UsuarioForm item={item} setValue={setItem} onClickAction={onClickAction} />
@@ -216,7 +257,7 @@ function App() {
         <div className='card-body'>
           <div className='mb-2'>
             <h5 className='card-title'>Usuários</h5>
-            <h6 className='card-subtitle mb-2 text-muted'> Lista de usuários cadastrados</h6>
+            <h6 className='card-subtitle mb-2 text-muted'> Lista de usuários cadastrados </h6>
           </div>
 
           <div className='d-flex justify-content-between align-items-center mb-2'>
@@ -232,7 +273,7 @@ function App() {
               <a
                 href='#'
                 className='card-link btn btn-warning'
-                onClick={() => onClickAction('MOSTRAR_REMOVIDOS')}
+                onClick={() => onClickAction('OCULTAR_REMOVIDOS')}
               >
                 Ocultar removidos
               </a>

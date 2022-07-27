@@ -14,10 +14,6 @@ export function Text({ id, name, label, value, onChange, type, autoComplete, ful
         type={type}
         autoComplete={autoComplete}
         className='form-control'
-        // ------------------------------------
-        //TODO Mostrar o value no campo
-
-        // ------------------------------------
         onChange={onChange}
       />
     </div>

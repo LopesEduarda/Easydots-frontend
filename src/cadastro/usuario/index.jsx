@@ -8,39 +8,33 @@ const UsuarioItem = ({ onClickAction, item }) => (
       <div>{item.id}</div>
       <div>{item.name}</div>
       <div>{item.email}</div>
-      {/* // ------------------------------------ */}
-      {/* TODO  mostrar o email do usuario*/}
-
-      {/* // ------------------------------------ */}
-      <div>{item.ativo ? 'Ativo' : 'inativo'}</div>
 
       <div className=' d-flex justify-content-between'>
         <div role='button'>
           <MdEdit size={24} color='#424242' onClick={() => onClickAction('EDITAR', item)} />
         </div>
-        {item.deletedAt === null ? (
-          <div role='button'>
-            <MdDelete
-              size={24}
-              color='#EF5350'
-              onClick={() => {
-                console.log(item);
-                onClickAction('REMOVER', { ...item });
-              }}
-            />
-          </div>
-        ) : (
-          <div role='button'>
-            <MdRestore
-              size={24}
-              color='#EF5350'
-              onClick={() => {
-                console.log(item);
-                onClickAction('RESTAURAR', { ...item });
-              }}
-            />
-          </div>
-        )}
+        {/* {item.deletedAt === null ? ( */}
+        <div role='button'>
+          <MdDelete
+            size={24}
+            color='#EF5350'
+            onClick={() => {
+              console.log(item);
+              onClickAction('REMOVER', { ...item });
+            }}
+          />
+        </div>
+        {/* ) : ( */}
+        <div role='button'>
+          <MdRestore
+            size={24}
+            color='#EF5350'
+            onClick={() => {
+              console.log(item);
+              onClickAction('RESTAURAR', { ...item });
+            }}
+          />
+        </div>
       </div>
     </div>
   </li>

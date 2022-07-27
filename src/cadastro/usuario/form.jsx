@@ -7,11 +7,7 @@ export default function UsuarioForm({ item, setValue }) {
   return (
     <div>
       <div className='mb-3 row'>
-        {/* // ------------------------------------ */}
-        {/* TODO adicione o campo nome  */}
-
-        {/* // ------------------------------------ */}
-
+     
         <Text
           id='name'
           label='Name'
@@ -49,23 +45,6 @@ export default function UsuarioForm({ item, setValue }) {
           }}
         />
       </div>
-
-       {/* <div className='mb-3 row'>
-        <label className='col-sm-2 col-form-label' htmlFor='flexCheckDefault'>
-          Ativo
-        </label> */}
-        
-        {/* <div className='col-sm-10'>
-          <input
-            className='form-check-input float-start'
-            type='checkbox'
-            value={item.ativo ? 'checked' : ''}
-            id='flexCheckDefault'
-            onChange={v => {
-              let valor = v.target?.checked;
-              setValue({ ...item, ativo: valor });
-            }}
-          /> */}
-        </div>  
-        );
+    </div>
+  );
 }
