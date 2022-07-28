@@ -8,6 +8,7 @@ import axios from 'axios'
 
 function App() {
   const [editUserPage, setEditUserPage] = useState(false)
+  const [restorePage, setRestorePage] = useState(false)
   const [item, setItem] = useState({});
   const [items, setItems] = useState([
     {
@@ -106,7 +107,6 @@ function App() {
       const response = null;
 
       const list = await UsuarioService.getDeletedUsers()
-      console.log(list)
       setItems(list.data.users)
 
       if (response.status === 200) {
@@ -122,18 +122,16 @@ function App() {
   const restaurar = async id => {
     try {
       setNotificacao({});
-      // ------------------------------------
-      // TODO Implementar a remoção de usuarios por ID
+
       const response = await UsuarioService.restoreByID(id)
 
       if (response.status === 200) init(paranoid);
       handleMessage(response);
-      // ------------------------------------
     } catch (error) {
       handleError(error.response);
     }
   };
-
+  console.log(restorePage)
   const onClickAction = async (action, v) => {
     setNotificacao({});
 
@@ -144,13 +142,19 @@ function App() {
     } else if (action === 'MOSTRAR_REMOVIDOS') {
       setParanoid(!paranoid);
       usuariosDeletados()
+      setRestorePage(true);
       // init(!paranoid);
     } else if (action === 'OCULTAR_REMOVIDOS') {
       setParanoid(!paranoid);
       init()
-    } else if (action === 'EDITAR') {
-      atualizar(v);
+      setRestorePage(false)
+    } else if (action === 'EDITPAGE') {
       setItem(v);
+      setEditMode(false);
+      setEditUserPage(true);
+    } else if (action === 'EDITAR') {
+      setItem(v);
+      atualizar(v);
       setEditMode(false);
       setEditUserPage(true);
     } else if (action === 'GRAVAR') {
@@ -233,14 +237,6 @@ function App() {
                 >
                   Gravar
                 </a>}
-              {/* 
-              <a
-                href='#'
-                className='card-link btn btn-success'
-                onClick={() => onClickAction('GRAVAR', item)}
-              >
-                Gravar
-              </a> */}
             </div>
 
             <UsuarioForm item={item} setValue={setItem} onClickAction={onClickAction} />
@@ -295,6 +291,7 @@ function App() {
           <UsuarioList
             items={items}
             onClickAction={onClickAction}
+            restorePageProps={restorePage}
           />
         </div>
       </div>

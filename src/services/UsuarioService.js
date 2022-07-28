@@ -68,8 +68,16 @@ function UsuarioService() {
   };
 
 
-  const restoreByID = id => {
-    return axios.patch(`${USUARIO_API_BASE_URL}/${id}`);
+  const restoreByID = async id => {
+    return axios.patch(`${USUARIO_API_BASE_URL}/restoreuser/${id}`)
+    .then((res) => {
+      console.log(res)
+      alert('Usuário restaurado com sucesso!')
+    })
+    .catch((error) => {
+      console.log(error)
+      alert('Erro ao restaurar usuário!')
+    })
   };
 
   return {

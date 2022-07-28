@@ -2,16 +2,17 @@ import React from 'react';
 
 import { MdDelete, MdEdit, MdRestore } from 'react-icons/md';
 
-const UsuarioItem = ({ onClickAction, item }) => (
+const UsuarioItem = ({ onClickAction, item, restorePageProps }) => (
+
   <li className='list-group-item'>
     <div key={item.id} className=' d-flex justify-content-between'>
       <div>{item.id}</div>
       <div>{item.name}</div>
       <div>{item.email}</div>
-
+      { console.log(restorePageProps)}
       <div className=' d-flex justify-content-between'>
         <div role='button'>
-          <MdEdit size={24} color='#424242' onClick={() => onClickAction('EDITAR', item)} />
+          <MdEdit size={24} color='#424242' onClick={() => onClickAction('EDITPAGE', item)} />
         </div>
         {/* {item.deletedAt === null ? ( */}
         <div role='button'>
@@ -25,7 +26,7 @@ const UsuarioItem = ({ onClickAction, item }) => (
           />
         </div>
         {/* ) : ( */}
-        <div role='button'>
+        {restorePageProps ? <div role='button'>
           <MdRestore
             size={24}
             color='#EF5350'
@@ -35,18 +36,23 @@ const UsuarioItem = ({ onClickAction, item }) => (
             }}
           />
         </div>
+          :
+          <div> </div>
+        }
+
       </div>
     </div>
   </li>
-);
+  )
 
-export default function UsuarioList({ items = [], onClickAction }) {
+
+export default function UsuarioList({ items = [], onClickAction, restorePageProps }) {
   return (
     <div>
       <div className='card'>
         <ul className='list-group list-group-flush'>
           {items.map(item => (
-            <UsuarioItem key={item.id} onClickAction={onClickAction} item={item}></UsuarioItem>
+            <UsuarioItem key={item.id} onClickAction={onClickAction} item={item} restorePageProps={restorePageProps}></UsuarioItem>
           ))}
         </ul>
       </div>
